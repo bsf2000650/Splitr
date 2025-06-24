@@ -120,6 +120,11 @@ const ContactsPage = () => {
       </div>
 
       {/* Create Group Modal */}
+      <CreateGroupModal
+        isOpen={isCreateGroupModalOpen}
+        onClose={() => setIsCreateGroupModalOpen(false)}
+        onSuccess={(groupId)=>router.push(`/groups/${groupId}`)}
+      />
     </div>
   );
 };
