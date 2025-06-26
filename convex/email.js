@@ -16,9 +16,9 @@ export const sendEmail = action({
 
     try {
       const result = await resend.emails.send({
-        from: "SplitrClone <onboarding@resend.dev>",
+        from: "Splitr <onboarding@resend.dev>",
         to: "asadullahmehsud1000@gmail.com",
-        subject: args.subject, 
+        subject: args.subject,
         html: args.html,
         text: args.text,
       });
