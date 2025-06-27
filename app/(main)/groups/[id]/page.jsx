@@ -1,36 +1,28 @@
 "use client";
 
-import ExpenseList from "@/components/expense-list";
-import GroupBalances from "@/components/group-balances";
-import GroupMembers from "@/components/group-members";
-import SettlementsList from "@/components/settlements-list";
+import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { api } from "@/convex/_generated/api";
+import { useConvexQuery } from "@/hooks/use-convex-query";
+import { BarLoader } from "react-spinners";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { api } from "@/convex/_generated/api";
-import { useConvexQuery } from "@/hooks/use-convex-query";
-import { ArrowLeft, ArrowLeftRight, PlusCircle, Users } from "lucide-react";
-import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { BarLoader } from "react-spinners";
+import { PlusCircle, ArrowLeftRight, ArrowLeft, Users } from "lucide-react";
+import SettlementsList from "@/components/settlements-list";
+import ExpenseList from "@/components/expense-list";
+import GroupBalances from "@/components/group-balances";
+import GroupMembers from "@/components/group-members";
 
-const GroupPage = () => {
+export default function GroupExpensesPage() {
   const params = useParams();
   const router = useRouter();
-
-  const [activeTab, setActiveTab] = useState(false);
+  const [activeTab, setActiveTab] = useState("expenses");
 
   const { data, isLoading } = useConvexQuery(api.groups.getGroupExpenses, {
     groupId: params.id,
   });
-
-  const group = data?.group;
-  const members = data?.members || [];
-  const expenses = data?.expenses || [];
-  const settlements = data?.settlements || [];
-  const balances = data?.balances || [];
-  const userLookupMap = data?.userLookupMap || {};
 
   if (isLoading) {
     return (
@@ -39,6 +31,13 @@ const GroupPage = () => {
       </div>
     );
   }
+
+  const group = data?.group;
+  const members = data?.members || [];
+  const expenses = data?.expenses || [];
+  const settlements = data?.settlements || [];
+  const balances = data?.balances || [];
+  const userLookupMap = data?.userLookupMap || {};
 
   return (
     <div className="container mx-auto py-6 max-w-4xl">
@@ -84,6 +83,7 @@ const GroupPage = () => {
         </div>
       </div>
 
+      {/* Grid layout for group details */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <div className="lg:col-span-2">
           <Card>
@@ -99,7 +99,7 @@ const GroupPage = () => {
         <div>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-xl"> Members</CardTitle>
+              <CardTitle className="text-xl">Members</CardTitle>
             </CardHeader>
             <CardContent>
               <GroupMembers members={members} />
@@ -143,6 +143,4 @@ const GroupPage = () => {
       </Tabs>
     </div>
   );
-};
-
-export default GroupPage;
+}
